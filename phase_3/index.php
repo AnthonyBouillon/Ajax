@@ -8,7 +8,8 @@
     </head>
 
     <body>
-        <form method="post" action="post.php">
+        <!-- Entrez un numéro d'identifiant -->
+        <form method="post">
             <input type="text" name="pro_id" id="pro_id">
             <input type="submit" id="button1">Envoyer
         </form>
@@ -22,17 +23,19 @@
             {
                 $("#button1").click(function ()
                 {
-
                     $.post({
                         url: "post.php",
+                        // Envoie l'identifiant du produit
                         data: { pro_id: $('#pro_id').val()},
                         success: function (resultat)
                         {
+                            // Objet parsé en JSON car le datatype n'a pas été spécifié
                             var resultParse = JSON.parse(resultat);
+                            // Affiche la référence du produit
                             $('#div1').html("<p>" + resultParse.pro_ref + "</p>");
                         }
                     });
-
+                    // Empêche la soumission du formulaire
                     return false;
                 });
             });
