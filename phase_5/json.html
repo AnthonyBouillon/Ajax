@@ -10,47 +10,56 @@
 </head>
 
 <body>
-  <input type="text" id="search"><button id="btn1">Va chercher !</button>
+  <!-- Barre de recherche -->
+  <input type="text" id="search">
+  <!-- Bouton avec un evenement cliquable -->
+  <button id="btn1">Va chercher !</button>
   <div class="container">
+    <!-- Block contenant le résultat -->
     <div class="row" id="div1">
 
     </div>
 </div>
 </body>
+<!-- jQuery (AJAX) -->
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<!-- Librairie qui facilite le formatage des dates -->
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script>
-
-$('#btn1').click(function(){
-  // Je vide le résultat pour faire place au nouveaux
-  $('#div1').empty();
-  // Je récupère la saisie de l'input
-  var string = $('#search').val();
-  $.get({
-      // URL où se trouve les données à récupérer
-      url: "http://api.themoviedb.org/3/search/movie?api_key=f33cd318f5135dba306176c13104506a&query=" + string,
-      // Type de données à récupérer
-      dataType: "json",
-      // Si la requête ajax fonctionne
-      success: function (data) {
-        for(let i = 0; i < data.results.length; i++ ){
-          var  mydate = new Date(data.results[i].release_date);
-          var date = moment(mydate).format("DD-MM-YYYY");
-            $('#div1').append(
-              "<div class='alert alert-dismissible alert-warning col-4'>" +
-                "<b>TITRE DU FILM : </b>" +
-                "<p>" + data.results[i].title + "</p>" +
-                "<b>DATE DE SORTIE DU FILM : </b>" +
-                "<p>" + date + "</p>" +
-                "<br/><br/>" +
-                "<img src='http://image.tmdb.org/t/p/w185" + data.results[i].poster_path + "' >" +
-                "<hr/>" +
-              "</div>"
-            );
-        };
-      }
+$(document).ready(function(){
+  // Quand l'utilisateur clique sur le bouton
+  $('#btn1').click(function(){
+    // Je vide le block de résultat pour faire place aux nouveaux
+    $('#div1').empty();
+    // Je récupère la saisie de l'input
+    var string = $('#search').val();
+    $.get({
+        // URL où se trouve les données à récupérer + la chaine de caractère recherché
+        url: "http://api.themoviedb.org/3/search/movie?api_key=f33cd318f5135dba306176c13104506a&query=" + string,
+        // Type de données à récupérer
+        dataType: "json",
+        // Si la requête ajax fonctionne
+        success: function (data) {
+          // Je part l'objet
+          for(let i = 0; i < data.results.length; i++ ){
+            // Je formate la date
+            var date = moment(data.results[i].release_date).format("DD-MM-YYYY");
+            // Et j'affiche le résultat de l'objet récupéré au format json json
+              $('#div1').append(
+                "<div class='alert alert-dismissible alert-warning col-4'>" +
+                  "<b>TITRE DU FILM : </b>" +
+                  "<p>" + data.results[i].title + "</p>" +
+                  "<b>DATE DE SORTIE DU FILM : </b>" +
+                  "<p>" + date + "</p>" +
+                  "<br/><br/>" +
+                  "<img src='http://image.tmdb.org/t/p/w185" + data.results[i].poster_path + "' >" +
+                  "<hr/>" +
+                "</div>"
+              );
+          };
+        }
+    });
   });
 });
-
 </script>
 </html>
